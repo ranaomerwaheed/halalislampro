@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حلال اسلام پرو - اسلامی عبادات</title>
+    <style>
+        @font-face {
+            font-family: 'Jameel Noori Nastaleeq';
+            src: url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap');
+        }
+        
+        body {
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(to right, #2b6cb0, #4c8bc5);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
+            border-bottom: 4px solid #1e56a0;
+        }
+        footer {
+            background: linear-gradient(to right, #2b6cb0, #4c8bc5);
+            color: white;
+            text-align: center;
+            padding: 18px;
+            width: 100%;
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
+            border-top: 4px solid #1e56a0;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            position: relative;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 25px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            padding-bottom: 80px;
+        }
+        h1, h2 {
+            color: #2b6cb0;
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .ibadat-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .ibadat-box {
+            perspective: 1000px;
+            min-height: 300px;
+        }
+        .ibadat-box-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-radius: 10px;
+            min-height: 300px;
+        }
+        .ibadat-box:hover .ibadat-box-inner {
+            transform: rotateY(10deg) rotateX(5deg) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .ibadat-box.active .ibadat-box-inner {
+            transform: rotateY(0) rotateX(0) translateY(0);
+            min-height: 100%;
+            height: auto;
+        }
+        .ibadat-box-front, .ibadat-box-back {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+            min-height: 300px;
+        }
+        .ibadat-box-front {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), var(--bg-image);
+            background-size: cover;
+            background-position: center;
+            color: white;
+            transform: rotateY(0deg);
+            z-index: 2;
+            text-align: center;
+            cursor: pointer;
+            border: 3px solid #2c5282;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .ibadat-box-back {
+            background: linear-gradient(135deg, #f7fafc, #ebf8ff);
+            color: #2d3748;
+            transform: rotateY(180deg);
+            z-index: 1;
+            border: 3px solid #bee3f8;
+            height: auto;
+        }
+        .ibadat-box.active .ibadat-box-front {
+            display: none;
+        }
+        .ibadat-box.active .ibadat-box-back {
+            transform: rotateY(0deg);
+            position: relative;
+            height: auto;
+        }
+        .ibadat-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            background-color: rgba(66, 153, 225, 0.7);
+            padding: 5px 15px;
+            border-radius: 20px;
+            width: fit-content;
+        }
+        .ibadat-desc {
+            background-color: rgba(44, 82, 130, 0.7);
+            padding: 5px 10px;
+            border-radius: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            width: fit-content;
+        }
+        h3 {
+            color: #2b6cb0;
+            border-bottom: 2px solid #bee3f8;
+            padding-bottom: 5px;
+            margin-top: 15px;
+        }
+        ul {
+            padding-right: 20px;
+            margin: 10px 0;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #e53e3e;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .close-btn:hover {
+            background: #c53030;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 15px auto;
+            }
+            .ibadat-title {
+                font-size: 24px;
+            }
+            .ibadat-box {
+                min-height: 250px;
+            }
+            .ibadat-box-front, .ibadat-box-back {
+                min-height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ibadat-container {
+                grid-template-columns: 1fr;
+            }
+            .ibadat-title {
+                font-size: 22px;
+            }
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>حلال اسلام پرو</h1>
+        <p>اسلامی عبادات کا جامع تعارف</p>
+    </header>
+
+    <div class="container">
+        <h2>پانچ اہم اسلامی عبادات</h2>
+        
+        <div class="ibadat-container">
+            <!-- Namaz Box -->
+            <div class="ibadat-box" onclick="toggleIbadat(this)" style="--bg-image: url('https://www.onlinequranlearnings.com/wp-content/uploads/2019/10/43916499sst1572349648-1024x675.jpg.webp')">
+                <div class="ibadat-box-inner">
+                    <div class="ibadat-box-front">
+                        <div class="ibadat-title">نماز</div>
+                        <div class="ibadat-desc">اسلام کا دوسرا رکن</div>
+                    </div>
+                    <div class="ibadat-box-back">
+                        <button class="close-btn" onclick="event.stopPropagation(); closeIbadat(this.parentElement.parentElement)">×</button>
+                        <h3>نماز کی فضیلت</h3>
+                        <p>نماز اسلام کا دوسرا اور اہم ترین رکن ہے۔ رسول اللہ ﷺ نے فرمایا: "نماز دین کا ستون ہے، جو اسے قائم کرے گا اس نے دین کو قائم کیا، اور جو اسے ترک کرے گا اس نے دین کو گرایا۔"</p>
+                        
+                        <h3>نماز کے اوقات</h3>
+                        <ul>
+                            <li>فجر: صبح صادق سے سورج نکلنے تک</li>
+                            <li>ظہر: زوال سے پہلے ہر چیز کا سایہ اس کی اصلی لمبائی کے برابر ہو جائے</li>
+                            <li>عصر: ہر چیز کا سایہ اس کی اصلی لمبائی سے دوگنا ہو جائے</li>
+                            <li>مغرب: سورج غروب ہونے سے شفق غائب ہونے تک</li>
+                            <li>عشاء: شفق غائب ہونے سے صبح صادق تک</li>
+                        </ul>
+                        
+                        <h3>نماز کی شرائط</h3>
+                        <p>نماز کے لیے طہارت (وضو یا غسل)، ستر ڈھانپنا، قبلہ رخ ہونا، اور وقت کا علم ہونا ضروری ہے۔</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Roza Box -->
+            <div class="ibadat-box" onclick="toggleIbadat(this)" style="--bg-image: url('https://learnalquran.co.uk/wp-content/uploads/2024/03/128624-870x475.jpg')">
+                <div class="ibadat-box-inner">
+                    <div class="ibadat-box-front">
+                        <div class="ibadat-title">روزہ</div>
+                        <div class="ibadat-desc">اسلام کا تیسرا رکن</div>
+                    </div>
+                    <div class="ibadat-box-back">
+                        <button class="close-btn" onclick="event.stopPropagation(); closeIbadat(this.parentElement.parentElement)">×</button>
+                        <h3>روزہ کی اہمیت</h3>
+                        <p>روزہ اسلام کا تیسرا رکن ہے جو رمضان المبارک کے مہینے میں فرض کیا گیا ہے۔ اللہ تعالیٰ فرماتا ہے: "اے ایمان والو! تم پر روزے فرض کیے گئے ہیں جیسے تم سے پہلے لوگوں پر فرض کیے گئے تھے تاکہ تم پرہیزگار بنو۔"</p>
+                        
+                        <h3>روزہ کے فوائد</h3>
+                        <ul>
+                            <li>تقویٰ اور پرہیزگاری پیدا ہوتی ہے</li>
+                            <li>صبر کی تربیت ہوتی ہے</li>
+                            <li>غریبوں کی حالت کا احساس ہوتا ہے</li>
+                            <li>صحت کے لیے مفید ہے</li>
+                            <li>گناہوں سے بچاؤ ہوتا ہے</li>
+                        </ul>
+                        
+                        <h3>روزہ کے آداب</h3>
+                        <p>سحری کھانا، افطاری میں جلدی کرنا، فضول باتوں سے پرہیز کرنا، قرآن پاک کی تلاوت کرنا، اور زیادہ سے زیادہ عبادت کرنا۔</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Zakat Box -->
+            <div class="ibadat-box" onclick="toggleIbadat(this)" style="--bg-image: url('https://img.freepik.com/premium-photo/zakat-concept-selective-focus-phrase-zakat-written-sticky-note-with-rice-sack-coins-alarm_805187-131.jpg?w=740')">
+                <div class="ibadat-box-inner">
+                    <div class="ibadat-box-front">
+                        <div class="ibadat-title">زکوٰۃ</div>
+                        <div class="ibadat-desc">اسلام کا چوتھا رکن</div>
+                    </div>
+                    <div class="ibadat-box-back">
+                        <button class="close-btn" onclick="event.stopPropagation(); closeIbadat(this.parentElement.parentElement)">×</button>
+                        <h3>زکوٰۃ کی فرضیت</h3>
+                        <p>زکوٰۃ اسلام کا چوتھا رکن ہے جو ہر صاحب نصاب مسلمان پر فرض ہے۔ اللہ تعالیٰ نے قرآن پاک میں 32 جگہوں پر نماز کے ساتھ زکوٰۃ کا ذکر فرمایا ہے۔</p>
+                        
+                        <h3>زکوٰۃ کے مصارف</h3>
+                        <ul>
+                            <li>فقیر اور مسکین</li>
+                            <li>زکوٰۃ وصول کرنے والے عاملین</li>
+                            <li>تالیف قلب کے لیے</li>
+                            <li>غلام آزاد کرنے میں</li>
+                            <li>قرض داروں کے لیے</li>
+                            <li>اللہ کی راہ میں</li>
+                            <li>مسافروں کے لیے</li>
+                        </ul>
+                        
+                        <h3>زکوٰۃ کا نصاب</h3>
+                        <p>سونا: 7.5 تولہ (87.48 گرام)، چاندی: 52.5 تولہ (612.36 گرام)، نقدی: اس کی مالیت کے برابر، مال تجارت: اس کی مالیت کے برابر۔</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hajj Box -->
+            <div class="ibadat-box" onclick="toggleIbadat(this)" style="--bg-image: url('https://wallpaperaccess.com/full/8823117.jpg')">
+                <div class="ibadat-box-inner">
+                    <div class="ibadat-box-front">
+                        <div class="ibadat-title">حج</div>
+                        <div class="ibadat-desc">اسلام کا پانچواں رکن</div>
+                    </div>
+                    <div class="ibadat-box-back">
+                        <button class="close-btn" onclick="event.stopPropagation(); closeIbadat(this.parentElement.parentElement)">×</button>
+                        <h3>حج کی فضیلت</h3>
+                        <p>حج اسلام کا پانچواں رکن ہے جو صاحب استطاعت مسلمان پر زندگی میں ایک بار فرض ہے۔ رسول اللہ ﷺ نے فرمایا: "جس نے حج کیا اور اس دوران فحش باتوں اور گناہوں سے بچا، وہ گناہوں سے اس طرح پاک ہو جاتا ہے جیسے ابھی ماں کے پیٹ سے پیدا ہوا ہو۔"</p>
+                        
+                        <h3>حج کے ارکان</h3>
+                        <ul>
+                            <li>احرام باندھنا</li>
+                            <li>عرفات میں وقوف</li>
+                            <li>طواف زیارت</li>
+                            <li>سعی</li>
+                        </ul>
+                        
+                        <h3>حج کی اقسام</h3>
+                        <p>حج تمتع: عمرہ کرنے کے بعد احرام کھولنا پھر 8 ذی الحجہ کو دوبارہ احرام باندھنا۔ حج قران: عمرہ اور حج دونوں کا ایک ساتھ احرام باندھنا۔ حج افراد: صرف حج کا احرام باندھنا۔</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Zikar Box -->
+            <div class="ibadat-box" onclick="toggleIbadat(this)" style="--bg-image: url('https://images.unsplash.com/photo-1519817650390-64a93db51149?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80')">
+                <div class="ibadat-box-inner">
+                    <div class="ibadat-box-front">
+                        <div class="ibadat-title">ذکر و اذکار</div>
+                        <div class="ibadat-desc">ہر وقت کی عبادت</div>
+                    </div>
+                    <div class="ibadat-box-back">
+                        <button class="close-btn" onclick="event.stopPropagation(); closeIbadat(this.parentElement.parentElement)">×</button>
+                        <h3>ذکر کی اہمیت</h3>
+                        <p>ذکر اللہ تعالیٰ کی یاد ہے جو ہر وقت کی جا سکتی ہے۔ اللہ تعالیٰ فرماتا ہے: "جو لوگ ایمان لائے اور ان کے دل اللہ کے ذکر سے مطمئن ہوتے ہیں، سنو! اللہ کے ذکر ہی سے دلوں کو اطمینان حاصل ہوتا ہے۔"</p>
+                        
+                        <h3>اذکار کی اقسام</h3>
+                        <ul>
+                            <li>تسبیح: سبحان اللہ</li>
+                            <li>تہلیل: لا الہ الا اللہ</li>
+                            <li>تکبیر: اللہ اکبر</li>
+                            <li>تحمید: الحمد للہ</li>
+                            <li>استغفار: استغفر اللہ</li>
+                            <li>درود شریف: اللهم صل على محمد</li>
+                        </ul>
+                        
+                        <h3>ذکر کے فوائد</h3>
+                        <p>دل کو سکون ملتا ہے، شیطان سے محفوظ رہتے ہیں، اللہ تعالیٰ کی رحمت نازل ہوتی ہے، گناہوں کی معافی ہوتی ہے، اور درجات بلند ہوتے ہیں۔</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 حلال اسلام پرو - تمام حقوق محفوظ ہیں</p>
+    </footer>
+
+    <script>
+        function toggleIbadat(box) {
+            // Close all other boxes first
+            const allBoxes = document.querySelectorAll('.ibadat-box');
+            allBoxes.forEach(item => {
+                if (item !== box && item.classList.contains('active')) {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Toggle current box
+            box.classList.toggle('active');
+            
+            // Scroll to the box if it's being opened
+            if (box.classList.contains('active')) {
+                box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        
+        function closeIbadat(box) {
+            box.classList.remove('active');
+        }
+        
+        // Add hover effect on desktop only
+        if (window.innerWidth > 768) {
+            const boxes = document.querySelectorAll('.ibadat-box');
+            boxes.forEach(box => {
+                box.addEventListener('mouseenter', function() {
+                    if (!this.classList.contains('active')) {
+                        this.querySelector('.ibadat-box-inner').style.transform = 'rotateY(10deg) rotateX(5deg) translateY(-5px)';
+                        this.querySelector('.ibadat-box-inner').style.boxShadow = '0 15px 30px rgba(0,0,0,0.2)';
+                    }
+                });
+                
+                box.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('active')) {
+                        this.querySelector('.ibadat-box-inner').style.transform = '';
+                        this.querySelector('.ibadat-box-inner').style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

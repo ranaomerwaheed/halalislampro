@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Halal Islam Pro – قرآن مجید</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
+  <style>
+    @font-face {
+  font-family: 'Jameel Noori';
+  src: url('https://cdn.jsdelivr.net/gh/aliftype/jameel-noori-nastaleeq/jameel-noori-nastaleeq.ttf') format('truetype');
+}
+
+    @font-face {
+      font-family: 'Jameel Noori';
+      src: url('https://cdn.jsdelivr.net/gh/aliftype/jameel-noori-nastaleeq/jameel-noori-nastaleeq.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Uthmani Quran';
+      src: url('https://cdn.jsdelivr.net/gh/fontlibrary/kfgqpc-uthmanic-script-hafs/UthmanicHafs1Ver18.otf') format('opentype');
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Jameel Noori', serif;
+      background: #f2f7f5;
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      background: #004d40;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+
+    /* Surah List Layout */
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .surah-box {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+
+    .surah-box:hover {
+      transform: scale(1.01);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+
+    .surah-title {
+      padding: 15px;
+      font-weight: bold;
+      color: #00695c;
+      font-size: 18px;
+      text-align: center;
+      cursor: pointer;
+      background: #e0f7fa;
+    }
+
+    .surah-content {
+      display: none;
+      padding: 20px;
+      background: #fafafa;
+    }
+
+    .surah-info {
+      font-size: 16px;
+      color: #33691e;
+      background: #f1f8e9;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-right: 4px solid #8bc34a;
+      border-radius: 6px;
+    }
+
+    .ayah {
+      padding: 12px;
+      margin-bottom: 10px;
+      border-right: 4px solid #009688;
+      border-radius: 6px;
+      background: #ffffff;
+    }
+
+    .arabic {
+      font-family: 'Uthmani Quran', serif;
+      font-size: 22px;
+      color: #222;
+      line-height: 2;
+    }
+
+    .urdu {
+      font-family: 'Jameel Noori', serif;
+      font-size: 20px;
+      color: #444;
+      margin-top: 6px;
+      line-height: 1.8;
+    }
+
+    /* Footer */
+    footer {
+      background: #004d40;
+      color: #fff;
+      text-align: center;
+      padding: 15px 10px;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .surah-title {
+        font-size: 16px;
+        padding: 12px;
+      }
+
+      .arabic, .urdu {
+        font-size: 18px;
+      }
+    }
+.go-back-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .go-back-btn img {
+      width: 50px;
+      height: auto;
+      transition: transform 0.2s ease;
+    }
+
+    .go-back-btn:hover img {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+<button class="go-back-btn" onclick="history.back()">
+    <img src="https://cdn-icons-png.flaticon.com/512/93/93634.png" href"index.html">
+  </button>
+
+  <!-- Header -->
+  <header>
+    <h1>🌙 Halal Islam Pro</h1>
+    <p>قرآن مجید مع اردو ترجمہ</p>
+
+  </header>
+
+  <!-- Main Container -->
+  <div class="container" id="surahList">
+    <p style="text-align:center;">براہ کرم کسی سورۃ پر کلک کریں</p>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+
+    &copy; 2025 Halal Islam Pro. تمام حقوق محفوظ ہیں۔
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Load Surah List
+    fetch('https://api.alquran.cloud/v1/surah')
+      .then(res => res.json())
+      .then(data => {
+        const surahList = document.getElementById('surahList');
+        surahList.innerHTML = ''; // Clear
+
+        data.data.forEach(surah => {
+          const box = document.createElement('div');
+          box.className = 'surah-box';
+
+          const title = document.createElement('div');
+          title.className = 'surah-title';
+          title.textContent = `${surah.number}. ${surah.englishName}`;
+          title.onclick = () => toggleSurah(surah.number, box);
+
+          const content = document.createElement('div');
+          content.className = 'surah-content';
+          content.id = `surah-content-${surah.number}`;
+
+          box.appendChild(title);
+          box.appendChild(content);
+          surahList.appendChild(box);
+        });
+      });
+
+    function toggleSurah(number, box) {
+      const contentDiv = document.getElementById(`surah-content-${number}`);
+
+      // Toggle visibility
+      if (contentDiv.style.display === 'block') {
+        contentDiv.style.display = 'none';
+        contentDiv.innerHTML = '';
+        return;
+      }
+
+      // Hide all others
+      document.querySelectorAll('.surah-content').forEach(div => {
+        div.style.display = 'none';
+        div.innerHTML = '';
+      });
+
+      contentDiv.style.display = 'block';
+      contentDiv.innerHTML = 'لوڈ ہو رہا ہے...';
+
+      // Fetch Surah Info
+      fetch(`https://api.alquran.cloud/v1/surah/${number}`)
+        .then(res => res.json())
+        .then(meta => {
+          const revelation = meta.data.revelationType === 'Meccan' ? 'مکی سورت' : 'مدنی سورت';
+          const info = `<div class="surah-info">🔖 یہ <b>${revelation}</b> ہے</div>`;
+          contentDiv.innerHTML = info;
+
+          // Ayat
+          Promise.all([
+            fetch(`https://api.alquran.cloud/v1/surah/${number}/ar.alafasy`).then(res => res.json()),
+            fetch(`https://api.alquran.cloud/v1/surah/${number}/ur.jalandhry`).then(res => res.json())
+          ])
+          .then(([ar, ur]) => {
+            ar.data.ayahs.forEach((ayah, i) => {
+              const urdu = ur.data.ayahs[i].text;
+              const ayahDiv = document.createElement('div');
+              ayahDiv.className = 'ayah';
+              ayahDiv.innerHTML = `
+                <div class="arabic">${ayah.text}</div>
+                <div class="urdu">${urdu}</div>
+              `;
+              contentDiv.appendChild(ayahDiv);
+            });
+          })
+          .catch(() => {
+            contentDiv.innerHTML = 'آیات لوڈ کرنے میں خرابی ہوئی ہے۔';
+          });
+        });
+    }
+  </script>
+
+</body>
+</html>

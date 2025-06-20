@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Halal Islam Pro</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/2yYYg6Wgg/wp4000959-atif-aslam-wallpapers.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header, footer {
+      background-color: #00796B;
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo-left img {
+      height: 50px;
+      border-radius: 8px;
+    }
+    .menu-bar {
+      display: flex;
+      gap: 15px;
+    }
+    .menu-bar a {
+      color: white;
+      background-color: #004d40;
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+    .menu-bar a:hover {
+      background-color: #009688;
+    }
+    .lang-toggle {
+      margin-top: 10px;
+    }
+    .lang-toggle button {
+      margin: 5px;
+      padding: 6px 14px;
+      font-size: 14px;
+      background-color: #004d40;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .lang-toggle button:hover {
+      background-color: #009688;
+    }
+    .info-section {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      background-color: #e0f2f1;
+      padding: 20px;
+    }
+    .info-box {
+      margin: 10px;
+      padding: 20px;
+      background: linear-gradient(145deg, #ffffff, #e6e6e6);
+      border-radius: 12px;
+      box-shadow: 6px 6px 15px rgba(0,0,0,0.1), -4px -4px 12px rgba(255,255,255,0.7);
+      text-align: center;
+      transition: 0.3s ease;
+    }
+    .info-box:hover {
+      transform: scale(1.03);
+      box-shadow: 8px 8px 20px rgba(0,0,0,0.15), -5px -5px 15px rgba(255,255,255,0.8);
+    }
+    .info-box h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      color: #00695c;
+    }
+    .info-box p {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+    .video-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .video {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    iframe {
+      width: 100%;
+      height: 200px;
+    }
+    .social-links a {
+      margin: 0 10px;
+      color: white;
+      text-decoration: none;
+      font-size: 22px;
+      transition: 0.3s ease;
+    }
+    .social-links a:hover {
+      color: #ffcc00;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo-left">
+        <img src="https://i.postimg.cc/2yYg6Wgg/wp4000959-atif-aslam-wallpapers.png" alt="Halal Islam Pro Logo">
+      </div>
+      <nav class="menu-bar">
+        <a href="quran.html" target="_blank">Quran</a>
+        <a href="hadith.html">Hadith</a>
+        <a href="ibadat.html">Ibadaat</a>
+        <a href="#supplication">Supplication</a>
+      </nav>
+    </div>
+    <div>
+      <h1 id="mainTitle"></h1>
+      <p id="mainDesc"></p>
+    </div>
+    
+  </header>
+
+  <div class="info-section">
+    <div class="info-box">
+      <h3>🕒 Live Time</h3>
+      <p id="liveTime">Loading...</p>
+    </div>
+    <div class="info-box">
+      <h3>📅 Islamic Date</h3>
+      <p id="hijriDate">Loading...</p>
+    </div>
+    <div class="info-box">
+      <h3>🌽 Today's Azan</h3>
+      <p id="azanTimes">Loading...</p>
+    </div>
+    <div class="info-box">
+      <h3>🌍 Your Location</h3>
+      <p id="location">Detecting...</p>
+      <p id="temperature">Loading Temperature...</p>
+    </div>
+  </div>
+
+  <h2 style="text-align:center" id="youtubeHeading">📹 Latest YouTube Videos</h2>
+  <div class="video-container" id="videoList"></div>
+
+  <footer>
+    <p>&copy; 2025 Halal Islam Pro. All rights reserved.</p>
+    <div class="social-links">
+      <a href="https://facebook.com/halalislampro" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://instagram.com/halalislampro" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://youtube.com/channel/UC4lZahm15DmGlwGX2PtBftg" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://tiktok.com/@halalislampro" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://whatsapp.com/channel/0029Vajkfsj2Jl8Esveax32v" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    </div>
+  </footer>
+
+  <script>
+    const apiKey = 'AIzaSyA4jDF_WGI_uVtibX4ISMQiR0vuR_jzp74';
+    const channelId = 'UC4lZahm15DmGlwGX2PtBftg';
+    const maxResults = 6;
+    const apiUrl = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=${maxResults}`;
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        const videoList = document.getElementById('videoList');
+        data.items.forEach(item => {
+          if (item.id.kind === 'youtube#video') {
+            const videoId = item.id.videoId;
+            const title = item.snippet.title;
+            const videoHTML = `
+              <div class="video">
+                <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                <p><strong>${title}</strong></p>
+              </div>`;
+            videoList.innerHTML += videoHTML;
+          }
+        });
+      });
+
+    function updateLiveTime() {
+      const now = new Date();
+      document.getElementById('liveTime').innerText = now.toLocaleTimeString();
+    }
+    setInterval(updateLiveTime, 1000);
+    updateLiveTime();
+
+    fetch('https://api.aladhan.com/v1/timingsByCity?city=Lahore&country=Pakistan&method=2')
+      .then(res => res.json())
+      .then(data => {
+        const hijri = data.data.date.hijri;
+        document.getElementById('hijriDate').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
+        const timings = data.data.timings;
+        document.getElementById('azanTimes').innerHTML = `
+          Fajr: ${timings.Fajr}<br>
+          Dhuhr: ${timings.Dhuhr}<br>
+          Asr: ${timings.Asr}<br>
+          Maghrib: ${timings.Maghrib}<br>
+          Isha: ${timings.Isha}`;
+      });
+
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        const city = data.city;
+        const country = data.country_name;
+        document.getElementById('location').innerText = `${city}, ${country}`;
+
+        const weatherAPI = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=YOUR_API_KEY&units=metric`;
+        fetch(weatherAPI)
+          .then(res => res.json())
+          .then(weather => {
+            const temp = weather.main.temp;
+            document.getElementById('temperature').innerText = `🌡️ Temp: ${temp}°C`;
+          })
+          .catch(() => {
+            document.getElementById('temperature').innerText = 'Temp not available';
+          });
+
+      })
+      .catch(() => {
+        document.getElementById('location').innerText = 'Unavailable';
+        document.getElementById('temperature').innerText = 'Temp not available';
+      });
+
+    function switchToUrdu() {
+      document.getElementById("mainTitle").innerText = "🕌 حلال اسلام پرو";
+      document.getElementById("mainDesc").innerText = "اسلامی ویڈیوز، اذان کے اوقات اور ہجری تاریخ";
+      document.getElementById("youtubeHeading").innerText = "📺 تازہ یوٹیوب ویڈیوز";
+    }
+
+    function switchToEnglish() {
+      document.getElementById("mainTitle").innerText = "🕌 Halal Islam Pro";
+      document.getElementById("mainDesc").innerText = "Islamic Videos, Azan Time & Hijri Date";
+      document.getElementById("youtubeHeading").innerText = "📺 Latest YouTube Videos";
+    }
+  </script>
+</body>
+</html>

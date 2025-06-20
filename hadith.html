@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>صحیح بخاری - اردو</title>
+  <style>
+    body { font-family: 'Jameel Noori Nastaleeq', serif; background: #f9f9f9; padding: 20px; }
+    .hadith { background: #fff; border: 1px solid #ccc; margin-bottom: 10px; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>صحیح بخاری کی تمام احادیث</h1>
+  <div id="hadiths">لوڈ ہو رہا ہے...</div>
+
+   <iframe class="scribd_iframe_embed" title="40 Hadees in Urdu" src="https://www.scribd.com/embeds/479298844/content?start_page=1&view_mode=scroll&access_key=key-QUhW498g3LlRxdq3lZRa" tabindex="0" data-auto-height="false" data-aspect-ratio="0.7068965517241379" scrolling="no" width="400" height="600" frameborder="0" ></iframe> <p style="margin: 12px auto 6px auto; font-family: Helvetica,Arial,Sans-serif; font-size: 14px; line-height: normal; display: block;"> <a title="View 40 Hadees in Urdu on Scribd" href="https://www.scribd.com/document/479298844/40-Hadees-in-Urdu#from_embed" style="color: #098642; text-decoration: underline;"> 40 Hadees in Urdu </a> by <a title="View Saqib imran 's profile on Scribd" href="https://www.scribd.com/user/323050233/Saqib-imran#from_embed" style="color: #098642; text-decoration: underline;" > Halal Islam Pro </a> </p> 
+
+  <script>
+    fetch("https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/urd-bukhari.json")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("hadiths");
+        container.innerHTML = "";
+        data.hadiths.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = "hadith";
+          div.innerHTML = `<strong>حدیث ${index + 1}:</strong><br>${item.text}`;
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        document.getElementById("hadiths").innerText = "ڈیٹا لوڈ کرنے میں مسئلہ ہوا۔";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
