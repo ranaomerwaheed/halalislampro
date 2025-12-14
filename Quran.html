@@ -5,74 +5,90 @@
 <title>Holy Quran</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Arabic Font -->
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f9f9f9;
+:root{
+  --bg:#f9f9f9;
+  --text:#000;
+  --card:#fff;
+}
+.dark{
+  --bg:#121212;
+  --text:#fff;
+  --card:#1e1e1e;
 }
 
-.container {
-  display: flex;
-  height: 100vh;
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, sans-serif;
+}
+
+.container{
+  display:flex;
+  height:100vh;
 }
 
 /* Sidebar */
-.sidebar {
-  width: 280px;
-  background: #0a3d62;
-  color: white;
-  overflow-y: auto;
+.sidebar{
+  width:280px;
+  background:#0a3d62;
+  color:#fff;
+  overflow-y:auto;
 }
-
-.sidebar h2 {
-  text-align: center;
-  padding: 15px;
-  margin: 0;
-  background: #07406b;
+.sidebar h2{
+  margin:0;
+  padding:15px;
+  text-align:center;
+  background:#062f4f;
 }
-
-.surah {
-  padding: 12px 15px;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+.surah{
+  padding:12px;
+  cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,0.1);
 }
-
-.surah:hover {
-  background: #1e5f8a;
+.surah:hover{
+  background:#1e5f8a;
 }
 
 /* Content */
-.content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
+.content{
+  flex:1;
+  padding:15px;
+  overflow-y:auto;
 }
-
-.ayah {
-  font-family: 'Amiri', serif;
-  font-size: 26px;
-  direction: rtl;
-  text-align: right;
-  margin-bottom: 10px;
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
-
-.translation {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 20px;
-  direction: ltr;
-  text-align: left;
+button{
+  padding:6px 10px;
+  cursor:pointer;
 }
-
-.header {
-  font-size: 22px;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 10px;
+.ayah-box{
+  background:var(--card);
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:6px;
+}
+.ayah{
+  font-family:'Amiri', serif;
+  font-size:26px;
+  direction:rtl;
+  text-align:right;
+}
+.translation{
+  font-size:14px;
+  margin-top:8px;
+  color:gray;
+}
+audio{
+  width:100%;
+  margin-top:8px;
 }
 </style>
 </head>
@@ -89,7 +105,10 @@ body {
 
   <!-- Content -->
   <div class="content">
-    <div class="header" id="surahTitle">Select a Surah</div>
+    <div class="topbar">
+      <h2 id="title">Select Surah</h2>
+      <button onclick="toggleDark()">🌙</button>
+    </div>
     <div id="ayahs"></div>
   </div>
 
@@ -98,39 +117,49 @@ body {
 <script>
 const surahList = document.getElementById("surahList");
 const ayahsDiv = document.getElementById("ayahs");
-const surahTitle = document.getElementById("surahTitle");
+const title = document.getElementById("title");
 
-/* Load Surah List */
+/* DARK MODE */
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
+
+/* LOAD SURAH LIST */
 fetch("https://api.quran.com/api/v4/chapters")
-  .then(res => res.json())
-  .then(data => {
-    surahList.innerHTML = "";
-    data.chapters.forEach(ch => {
-      let div = document.createElement("div");
-      div.className = "surah";
-      div.innerHTML = `${ch.id}. ${ch.name_simple}`;
-      div.onclick = () => loadSurah(ch.id, ch.name_simple);
-      surahList.appendChild(div);
-    });
+.then(r=>r.json())
+.then(d=>{
+  surahList.innerHTML="";
+  d.chapters.forEach(s=>{
+    let div=document.createElement("div");
+    div.className="surah";
+    div.innerText=`${s.id}. ${s.name_simple}`;
+    div.onclick=()=>loadSurah(s.id,s.name_simple);
+    surahList.appendChild(div);
   });
+});
 
-/* Load Surah Ayahs */
-function loadSurah(number, name) {
-  surahTitle.innerText = `Surah ${name}`;
-  ayahsDiv.innerHTML = "Loading...";
+/* LOAD SURAH DATA */
+function loadSurah(id,name){
+  title.innerText="Surah "+name;
+  ayahsDiv.innerHTML="Loading...";
 
   Promise.all([
-    fetch(`https://api.quran.com/api/v4/quran/verses/uthmani?chapter_number=${number}`),
-    fetch(`https://api.quran.com/api/v4/quran/translations/131?chapter_number=${number}`)
+    fetch(`https://api.quran.com/api/v4/quran/verses/uthmani?chapter_number=${id}`),
+    fetch(`https://api.quran.com/api/v4/quran/translations/131?chapter_number=${id}`),
+    fetch(`https://api.quran.com/api/v4/quran/translations/97?chapter_number=${id}`),
+    fetch(`https://api.quran.com/api/v4/recitations/7/by_chapter/${id}`)
   ])
-  .then(responses => Promise.all(responses.map(r => r.json())))
-  .then(([arabic, translation]) => {
-    ayahsDiv.innerHTML = "";
-
-    arabic.verses.forEach((ayah, i) => {
-      ayahsDiv.innerHTML += `
-        <div class="ayah">${ayah.text_uthmani}</div>
-        <div class="translation">${translation.translations[i].text}</div>
+  .then(res=>Promise.all(res.map(r=>r.json())))
+  .then(([ar,en,ur,audio])=>{
+    ayahsDiv.innerHTML="";
+    ar.verses.forEach((v,i)=>{
+      ayahsDiv.innerHTML+=`
+        <div class="ayah-box">
+          <div class="ayah">${v.text_uthmani}</div>
+          <div class="translation"><b>EN:</b> ${en.translations[i].text}</div>
+          <div class="translation"><b>UR:</b> ${ur.translations[i].text}</div>
+          <audio controls src="${audio.audio_files[i].url}"></audio>
+        </div>
       `;
     });
   });
