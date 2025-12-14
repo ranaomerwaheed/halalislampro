@@ -3,157 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قرآن مجید - API انٹیگریشن</title>
+    <title>قرآن مجید - Quran.com API انٹیگریشن</title>
     
     <style>
         /* بنیادی CSS اسٹائلنگ */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: #f4f7f6;
             color: #333;
         }
-        #header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        #main-container {
+            display: flex;
+            min-height: 100vh;
         }
-        #chapter-selector {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        #sidebar {
+            width: 280px;
+            background-color: #f8f8f8;
+            border-left: 1px solid #ddd;
+            padding: 15px 0;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            direction: rtl; /* سائیڈ بار اردو کے لیے */
         }
-        #chapter-select {
-            padding: 10px;
+        #sidebar h2 {
+            font-size: 18px;
+            text-align: center;
+            color: #1a531a;
+            margin-bottom: 10px;
+        }
+        .chapter-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chapter-item:hover, .chapter-item.active {
+            background-color: #e6ffe6; /* ہلکا سبز */
+            color: #1a531a;
+            font-weight: bold;
+        }
+        .chapter-item span:first-child {
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 90%;
-            max-width: 400px;
         }
-        #quran-container {
-            max-width: 850px;
+        .chapter-item small {
+            font-size: 12px;
+            color: #777;
+        }
+
+        #content {
+            flex-grow: 1;
+            padding: 30px;
+            max-width: 900px;
             margin: auto;
+        }
+
+        #quran-container {
             background-color: white;
             padding: 25px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            min-height: 500px;
         }
+        
+        .loading-text {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 20px;
+            padding: 50px;
+        }
+        
+        /* آیت کا ڈسپلے */
         .quran-verse {
             margin-bottom: 30px;
             padding-bottom: 15px;
-            border-bottom: 1px dashed #eee;
+            border-bottom: 1px dashed #ddd;
         }
         .arabic-text {
-            /* فونٹ سیٹنگز قرآن.کوم کے مماثل */
             font-family: 'A-Uthman Taha Naskh', 'KFGQPC Uthman Taha Naskh', 'Scheherazade', serif;
-            font-size: 30px; /* سائز بڑھایا تاکہ پڑھنے میں آسانی ہو */
+            font-size: 30px; 
             text-align: right;
             line-height: 2.2;
-            color: #1a531a; /* گہرا سبز */
+            color: #1a531a;
+            direction: rtl;
         }
         .translation-text {
             font-size: 16px;
-            text-align: right; /* ترجمہ اردو میں بھی دائیں سے شروع ہوتا ہے */
-            color: #555;
+            text-align: right;
+            color: #444;
             margin-top: 10px;
-            border-right: 3px solid #4CAF50;
-            padding-right: 10px;
-            direction: rtl; /* اردو کے لیے */
+            border-right: 4px solid #4CAF50;
+            padding-right: 12px;
+            direction: rtl;
         }
         .verse-number {
             font-size: 18px;
             color: #4CAF50;
             font-weight: bold;
             margin-right: 5px;
+            padding: 3px 8px;
+            border: 1px solid #4CAF50;
+            border-radius: 50%;
+            display: inline-block;
         }
+        #bismillah {
+            text-align: center;
+            font-size: 36px;
+            color: #4CAF50;
+            margin: 40px 0;
+            font-family: 'A-Uthman Taha Naskh';
+            direction: rtl;
+        }
+
         @font-face {
-            /* فونٹ جو Quran.com جیسا نظر آئے */
             font-family: 'A-Uthman Taha Naskh';
             src: url('https://kfgqpc.com/assets/fonts/kfgqpc-uthman-taha-naskh/KFGQPC-Uthman-Taha-Naskh-v1.ttf') format('truetype');
         }
     </style>
 </head>
-<body onload="populateChapters(); loadQuranChapter(1)">
 
-    <div id="header">
-        <h1>القرآن الكريم (Quran.com API)</h1>
-        <p>عربی متن اور اردو ترجمہ</p>
-    </div>
+<body onload="fetchChapterList();">
 
-    <div id="chapter-selector">
-        <label for="chapter-select">سورہ منتخب کریں:</label>
-        <select id="chapter-select" onchange="loadSelectedChapter()">
-            </select>
-    </div>
+    <div id="main-container">
+        <div id="sidebar">
+            <h2>سورتیں</h2>
+            <div id="chapter-list">
+                <p class="loading-text" style="padding: 10px;">...لوڈ ہو رہا ہے...</p>
+            </div>
+        </div>
 
-    <div id="quran-container">
-        <p style="text-align: center;">... لوڈ ہو رہا ہے ...</p>
+        <div id="content">
+            <div id="quran-container">
+                <p class="loading-text">
+                    سائیڈ بار سے سورہ منتخب کریں۔
+                    <br>
+                    یا
+                    <br>
+                    انتظار کریں، فہرست لوڈ ہو رہی ہے۔
+                </p>
+            </div>
+        </div>
     </div>
 
     <script>
-        // تمام 114 سورتوں کی فہرست
-        const chapters = [
-            // ... سورتوں کی مکمل فہرست فراہم کرنا بہت لمبا ہے، اس لیے ہم صرف ایک جزوی فہرست دکھا رہے ہیں،
-            // لیکن آپ اسے مکمل 114 تک بڑھا سکتے ہیں۔
-            { id: 1, name_arabic: "الفاتحة", name_urdu: "الفاتحہ" },
-            { id: 2, name_arabic: "البقرة", name_urdu: "البقرہ" },
-            { id: 3, name_arabic: "آل عمران", name_urdu: "آل عمران" },
-            { id: 4, name_arabic: "النساء", name_urdu: "النساء" },
-            { id: 5, name_arabic: "المائدة", name_urdu: "المائدہ" },
-            // ... آپ کو یہاں 114 سورتوں تک شامل کرنا ہوگا۔
-            { id: 110, name_arabic: "النصر", name_urdu: "النصر" },
-            { id: 111, name_arabic: "المسد", name_urdu: "المسد" },
-            { id: 112, name_arabic: "الإخلاص", name_urdu: "الاخلاص" },
-            { id: 113, name_arabic: "الفلق", name_urdu: "الفلق" },
-            { id: 114, name_arabic: "الناس", name_urdu: "الناس" }
-        ];
+        const QURAN_API_BASE = 'https://api.quran.com/api/v4';
+        const TRANSLATION_ID = 84; // 84 = Fatehpuri (Urdu)
 
-        // 1. ڈراپ ڈاؤن کو سورتوں سے بھرنا
-        function populateChapters() {
-            const selectElement = document.getElementById('chapter-select');
-            chapters.forEach(chapter => {
-                const option = document.createElement('option');
-                option.value = chapter.id;
-                option.textContent = `${chapter.id}. ${chapter.name_urdu} (${chapter.name_arabic})`;
-                selectElement.appendChild(option);
+        let allChapters = [];
+        
+        // 1. تمام سورتوں کی فہرست حاصل کرنا اور سائیڈ بار بنانا
+        async function fetchChapterList() {
+            const url = `${QURAN_API_BASE}/chapters?language=ur`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                allChapters = data.chapters;
+                
+                populateSidebar();
+                // ڈیفالٹ کے طور پر سورہ الفاتحہ (ID 1) لوڈ کریں
+                loadQuranChapter(1); 
+            } catch (error) {
+                console.error("سورتوں کی فہرست لوڈ کرنے میں خرابی:", error);
+                document.getElementById('chapter-list').innerHTML = 
+                    `<p style="color: red; text-align: center;">فہرست لوڈ نہیں ہو سکی۔</p>`;
+            }
+        }
+
+        // سائیڈ بار میں سورتیں ڈسپلے کرنا
+        function populateSidebar() {
+            const listDiv = document.getElementById('chapter-list');
+            listDiv.innerHTML = ''; // پرانے لوڈنگ ٹیکسٹ کو ہٹائیں
+
+            allChapters.forEach(chapter => {
+                const chapterDiv = document.createElement('div');
+                chapterDiv.classList.add('chapter-item');
+                chapterDiv.setAttribute('data-id', chapter.id);
+                chapterDiv.onclick = () => loadQuranChapter(chapter.id);
+                
+                chapterDiv.innerHTML = `
+                    <span>${chapter.id}. ${chapter.translated_name.name}</span>
+                    <small>${chapter.name_simple}</small>
+                `;
+                listDiv.appendChild(chapterDiv);
             });
         }
 
-        // 2. سورہ کو لوڈ کرنے کا مرکزی فنکشن
-        function loadQuranChapter(chapterNumber) {
+        // 2. کسی مخصوص سورہ کی آیات اور ترجمہ لوڈ کرنا
+        async function loadQuranChapter(chapterNumber) {
             const container = document.getElementById('quran-container');
-            container.innerHTML = `<p style="text-align: center; color: #4CAF50;">سورہ نمبر ${chapterNumber} لوڈ ہو رہی ہے...</p>`;
+            container.innerHTML = `<p class="loading-text">سورہ نمبر ${chapterNumber} لوڈ ہو رہی ہے...</p>`;
             
-            // اردو ترجمہ ID: 84 (فتح پوری) - یہ Quran.com کا آفیشل ID ہے
-            const translationId = 84; 
+            // سائیڈ بار میں ایکٹیو کلاس سیٹ کرنا
+            document.querySelectorAll('.chapter-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.chapter-item[data-id="${chapterNumber}"]`)?.classList.add('active');
+
+            // API Endpoints: ایک ہی کال میں آیت اور ترجمہ حاصل کرنا
+            const versesEndpoint = `${QURAN_API_BASE}/verses/by_chapter/${chapterNumber}?translations=${TRANSLATION_ID}&fields=text_uthmani&language=ur`;
             
-            // Verses Endpoint: 
-            // - text_uthmani: عثمانی رسم الخط میں عربی متن کے لیے
-            // - translations: ترجمہ کے لیے
-            const versesEndpoint = `https://api.quran.com/api/v4/verses/by_chapter/${chapterNumber}?language=ur&translations=${translationId}&fields=text_uthmani`;
-            
-            fetch(versesEndpoint)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('API رسپانس ٹھیک نہیں ہے');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    displayVerses(data.verses, chapterNumber);
-                })
-                .catch(error => {
-                    console.error('API کال میں کوئی خرابی ہوئی:', error);
-                    container.innerHTML = `<p style="color: red; text-align: center;">معاف کیجیے! سورہ کا ڈیٹا لوڈ نہیں ہو سکا۔</p>`;
-                });
+            try {
+                const response = await fetch(versesEndpoint);
+                const data = await response.json();
+                
+                displayVerses(data.verses, chapterNumber);
+            } catch (error) {
+                console.error('API کال میں کوئی خرابی ہوئی:', error);
+                container.innerHTML = `<p style="color: red; text-align: center;">معاف کیجیے! سورہ کا ڈیٹا لوڈ نہیں ہو سکا۔</p>`;
+            }
         }
 
         // 3. آیات کو ڈسپلے کرنا
@@ -161,48 +225,47 @@
             const container = document.getElementById('quran-container');
             container.innerHTML = '';
             
-            // بسم اللہ الرحمن الرحیم (سوائے سورہ توبہ کے)
+            const currentChapter = allChapters.find(c => c.id === chapterNumber);
+
+            // سورہ کا نام ہیڈنگ میں دکھائیں
+            container.innerHTML += `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h1 style="color: #4CAF50;">${currentChapter.translated_name.name} (${currentChapter.name_arabic})</h1>
+                    <p style="font-size: 14px; color: #777;">آیات: ${currentChapter.verses_count}</p>
+                </div>
+                <hr>
+            `;
+
+            // بسم اللہ الرحمن الرحیم (سوائے سورہ توبہ (9) کے)
             if (chapterNumber !== 9) {
                 container.innerHTML += `
-                    <p class="arabic-text" dir="rtl" style="text-align: center; font-size: 36px; margin-bottom: 40px; color: #4CAF50;">
-                        بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-                    </p>
+                    <p id="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
                 `;
             }
 
             verses.forEach(verse => {
                 const arabicText = verse.text_uthmani;
-                // ترجمہ ہمیشہ translation array کے پہلے عنصر میں موجود ہوتا ہے۔
+                // ترجمہ ہمیشہ translations array میں موجود ہوتا ہے۔
                 const translationText = verse.translations && verse.translations[0] ? verse.translations[0].text : 'ترجمہ دستیاب نہیں'; 
 
                 const verseDiv = document.createElement('div');
                 verseDiv.classList.add('quran-verse');
 
                 verseDiv.innerHTML = `
-                    <p class="arabic-text" dir="rtl">
+                    <p class="arabic-text">
                         ${arabicText} 
-                        <span class="verse-number"> ۝${verse.verse_number}</span>
+                        <span class="verse-number">${verse.verse_number}</span>
                     </p>
-                    <p class="translation-text" dir="rtl">
-                        (${verse.verse_number}) ${translationText}
+                    <p class="translation-text">
+                        **[آیت ${verse.verse_number}]** ${translationText}
                     </p>
                 `;
 
                 container.appendChild(verseDiv);
             });
-            // سکرول کو سب سے اوپر لے جائیں
-            window.scrollTo(0, 0); 
+            // سکرول کو مواد کے اوپر لے جائیں
+            document.getElementById('content').scrollTo(0, 0); 
         }
-
-        // 4. ڈراپ ڈاؤن سے سورہ لوڈ کرنا
-        function loadSelectedChapter() {
-            const selectElement = document.getElementById('chapter-select');
-            const selectedChapter = selectElement.value;
-            if (selectedChapter) {
-                loadQuranChapter(selectedChapter);
-            }
-        }
-        
     </script>
 </body>
 </html>
