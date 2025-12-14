@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قرآن مجید - Quran.com API انٹیگریشن</title>
+    <title>قرآن مجید - مکمل API انٹیگریشن</title>
     
     <style>
         /* بنیادی CSS اسٹائلنگ */
@@ -14,6 +14,14 @@
             background-color: #f4f7f6;
             color: #333;
         }
+        
+        /* King Fahd Complex / Uthman Taha Naskh Font کی تعریف */
+        @font-face {
+            font-family: 'KFGQPC Uthman Taha Naskh';
+            /* یہ فونٹ عموماً King Fahd Complex کے نسخ خطاطی سے مماثل ہے */
+            src: url('https://kfgqpc.com/assets/fonts/kfgqpc-uthman-taha-naskh/KFGQPC-Uthman-Taha-Naskh-v1.ttf') format('truetype');
+        }
+
         #main-container {
             display: flex;
             min-height: 100vh;
@@ -27,7 +35,8 @@
             position: sticky;
             top: 0;
             height: 100vh;
-            direction: rtl; /* سائیڈ بار اردو کے لیے */
+            direction: rtl; 
+            flex-shrink: 0; /* سائیڈ بار کو سکڑنے سے روکیں */
         }
         #sidebar h2 {
             font-size: 18px;
@@ -45,26 +54,19 @@
             align-items: center;
         }
         .chapter-item:hover, .chapter-item.active {
-            background-color: #e6ffe6; /* ہلکا سبز */
+            background-color: #e6ffe6; 
             color: #1a531a;
             font-weight: bold;
-        }
-        .chapter-item span:first-child {
-            font-size: 16px;
-        }
-        .chapter-item small {
-            font-size: 12px;
-            color: #777;
         }
 
         #content {
             flex-grow: 1;
             padding: 30px;
-            max-width: 900px;
-            margin: auto;
         }
 
         #quran-container {
+            max-width: 900px;
+            margin: auto;
             background-color: white;
             padding: 25px;
             border-radius: 8px;
@@ -79,14 +81,15 @@
             padding: 50px;
         }
         
-        /* آیت کا ڈسپلے */
+        /* آیت کا ڈسپلے اور فونٹ */
         .quran-verse {
             margin-bottom: 30px;
             padding-bottom: 15px;
             border-bottom: 1px dashed #ddd;
         }
         .arabic-text {
-            font-family: 'A-Uthman Taha Naskh', 'KFGQPC Uthman Taha Naskh', 'Scheherazade', serif;
+            /* Fahad Complex/Uthman Taha Naskh فونٹ کا استعمال */
+            font-family: 'KFGQPC Uthman Taha Naskh', 'Scheherazade', serif; 
             font-size: 30px; 
             text-align: right;
             line-height: 2.2;
@@ -117,13 +120,8 @@
             font-size: 36px;
             color: #4CAF50;
             margin: 40px 0;
-            font-family: 'A-Uthman Taha Naskh';
+            font-family: 'KFGQPC Uthman Taha Naskh';
             direction: rtl;
-        }
-
-        @font-face {
-            font-family: 'A-Uthman Taha Naskh';
-            src: url('https://kfgqpc.com/assets/fonts/kfgqpc-uthman-taha-naskh/KFGQPC-Uthman-Taha-Naskh-v1.ttf') format('truetype');
         }
     </style>
 </head>
@@ -132,20 +130,16 @@
 
     <div id="main-container">
         <div id="sidebar">
-            <h2>سورتیں</h2>
+            <h2>سورتیں (114)</h2>
             <div id="chapter-list">
-                <p class="loading-text" style="padding: 10px;">...لوڈ ہو رہا ہے...</p>
+                <p class="loading-text" style="padding: 10px;">...فہرست لوڈ ہو رہی ہے...</p>
             </div>
         </div>
 
         <div id="content">
             <div id="quran-container">
                 <p class="loading-text">
-                    سائیڈ بار سے سورہ منتخب کریں۔
-                    <br>
-                    یا
-                    <br>
-                    انتظار کریں، فہرست لوڈ ہو رہی ہے۔
+                    براہ کرم انتظار کریں، یا سائیڈ بار سے سورہ منتخب کریں۔
                 </p>
             </div>
         </div>
@@ -157,36 +151,44 @@
 
         let allChapters = [];
         
-        // 1. تمام سورتوں کی فہرست حاصل کرنا اور سائیڈ بار بنانا
+        // 1. تمام 114 سورتوں کی فہرست حاصل کرنا
         async function fetchChapterList() {
-            const url = `${QURAN_API_BASE}/chapters?language=ur`;
+            // API سے تمام سورتوں کی تفصیلات حاصل کریں
+            const url = `${QURAN_API_BASE}/chapters?language=ur`; 
             
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                allChapters = data.chapters;
                 
-                populateSidebar();
-                // ڈیفالٹ کے طور پر سورہ الفاتحہ (ID 1) لوڈ کریں
-                loadQuranChapter(1); 
+                // یقینی بنائیں کہ تمام 114 سورتیں موجود ہیں
+                if (data.chapters && data.chapters.length === 114) { 
+                    allChapters = data.chapters;
+                    populateSidebar();
+                    // ڈیفالٹ کے طور پر سورہ الفاتحہ (ID 1) لوڈ کریں
+                    loadQuranChapter(1); 
+                } else {
+                    throw new Error("سورتوں کی فہرست نامکمل ہے۔");
+                }
             } catch (error) {
                 console.error("سورتوں کی فہرست لوڈ کرنے میں خرابی:", error);
                 document.getElementById('chapter-list').innerHTML = 
-                    `<p style="color: red; text-align: center;">فہرست لوڈ نہیں ہو سکی۔</p>`;
+                    `<p style="color: red; text-align: center;">فہرست لوڈ نہیں ہو سکی۔ انٹرنیٹ چیک کریں۔</p>`;
             }
         }
 
-        // سائیڈ بار میں سورتیں ڈسپلے کرنا
+        // سائیڈ بار میں تمام 114 سورتیں ڈسپلے کرنا
         function populateSidebar() {
             const listDiv = document.getElementById('chapter-list');
-            listDiv.innerHTML = ''; // پرانے لوڈنگ ٹیکسٹ کو ہٹائیں
+            listDiv.innerHTML = ''; 
 
             allChapters.forEach(chapter => {
                 const chapterDiv = document.createElement('div');
                 chapterDiv.classList.add('chapter-item');
                 chapterDiv.setAttribute('data-id', chapter.id);
+                // کلک ایونٹ شامل کریں
                 chapterDiv.onclick = () => loadQuranChapter(chapter.id);
                 
+                // نام (اردو میں) اور آسان نام (انگریزی/عربی میں) دکھائیں
                 chapterDiv.innerHTML = `
                     <span>${chapter.id}. ${chapter.translated_name.name}</span>
                     <small>${chapter.name_simple}</small>
@@ -206,7 +208,7 @@
             });
             document.querySelector(`.chapter-item[data-id="${chapterNumber}"]`)?.classList.add('active');
 
-            // API Endpoints: ایک ہی کال میں آیت اور ترجمہ حاصل کرنا
+            // Verses Endpoint: ایک ہی کال میں آیت (Uthmani) اور ترجمہ (Urdu) حاصل کرنا
             const versesEndpoint = `${QURAN_API_BASE}/verses/by_chapter/${chapterNumber}?translations=${TRANSLATION_ID}&fields=text_uthmani&language=ur`;
             
             try {
@@ -231,12 +233,12 @@
             container.innerHTML += `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h1 style="color: #4CAF50;">${currentChapter.translated_name.name} (${currentChapter.name_arabic})</h1>
-                    <p style="font-size: 14px; color: #777;">آیات: ${currentChapter.verses_count}</p>
+                    <p style="font-size: 14px; color: #777;">آیات: ${currentChapter.verses_count} | مکی/مدنی: ${currentChapter.revelation_place === 'makkah' ? 'مکی' : 'مدنی'}</p>
                 </div>
                 <hr>
             `;
 
-            // بسم اللہ الرحمن الرحیم (سوائے سورہ توبہ (9) کے)
+            // بسم اللہ الرحمن الرحیم (صرف سورہ توبہ (9) کے علاوہ)
             if (chapterNumber !== 9) {
                 container.innerHTML += `
                     <p id="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
@@ -245,7 +247,6 @@
 
             verses.forEach(verse => {
                 const arabicText = verse.text_uthmani;
-                // ترجمہ ہمیشہ translations array میں موجود ہوتا ہے۔
                 const translationText = verse.translations && verse.translations[0] ? verse.translations[0].text : 'ترجمہ دستیاب نہیں'; 
 
                 const verseDiv = document.createElement('div');
