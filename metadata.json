@@ -1,0 +1,6 @@
+{
+  "name": "Halal Islam Pro",
+  "description": "Halal Islam Pro - Complete authentic Islamic platform featuring the Holy Qur'an, Hadith collections, Namaz & Janaza guides, Duas, Prayer Times, Qibla Finder, Azkar, and comprehensive Islamic Knowledge.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
