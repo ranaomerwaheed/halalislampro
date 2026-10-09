@@ -1,0 +1,31 @@
+{
+  "id": "/",
+  "name": "Deen - Islamic Companion",
+  "short_name": "Deen",
+  "description": "Your complete modern Islamic companion for Qur'an, Hadith, Duas, Prayer Times, and Islamic Knowledge.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#064e3b",
+  "theme_color": "#064e3b",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/k5Gz9zYv/hip.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/k5Gz9zYv/hip.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/k5Gz9zYv/hip.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
